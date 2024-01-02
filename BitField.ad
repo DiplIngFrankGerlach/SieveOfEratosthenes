@@ -1,0 +1,13 @@
+
+
+class BitField
+{
+   *longlong field[];
+methods: 
+   BitField(int size);
+
+   int isSet(int index);
+   void set(int index, int value);
+
+   void UnitTest();
+};

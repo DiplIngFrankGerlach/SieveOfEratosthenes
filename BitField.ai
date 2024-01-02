@@ -1,0 +1,102 @@
+
+BitField::BitField(int size)
+{
+   var int m64 = size % 64;
+   if(m64 > 0)
+   {
+      field = new longlong[(size / 64) + 1];
+   }
+   else
+   {
+      field = new longlong[size / 64];
+   }
+   for(var int i=0; i < field.sz;i++ ){ field[i] = cast(longlong,0); }
+}
+
+int BitField::isSet(int index)
+{
+    var int wortPos = index / 64;
+    var int bitPos = index % 64;
+    var longlong wort = field[wortPos];
+    return cast(int, ((wort >> bitPos) & 0x1) ) ;
+}
+
+
+void BitField::set(int index, int value)
+{
+    var int wortPos = index / 64;
+    var int bitPos = index % 64;
+    var longlong mask = 1;
+    mask = mask << bitPos;
+    if(value == 1) 
+    { field[wortPos] = field[wortPos] | mask; }
+    else
+    { 
+       mask = 0xFFFFFFFFFFFFFFFF ^ mask;
+       field[wortPos] = field[wortPos] & mask; 
+    }
+
+}
+
+
+void BitField::UnitTest()
+{
+    var PrintfClass pfc;
+    var BitField bf(1000);
+    bf.set(333,1);
+    if(bf.isSet(333) != 1) { pfc.fstr("BitField::UnitTest() Fehler 1").pr(); }
+    for(var int i=0; i < 1000; i++)
+    {
+        if((i != 333) && (bf.isSet(i) != 0)) { pfc.fstr("BitField::UnitTest() Fehler 2").pr(); }
+    }
+
+    bf.set(337,1);
+    for(var int i=0; i < 1000; i++)
+    {
+        if((i != 333) && (i != 337) && (bf.isSet(i) != 0)) { pfc.fstr("BitField::UnitTest() Fehler 3").pr(); }
+    }
+    bf.set(338,1);
+    for(var int i=0; i < 1000; i++)
+    {
+        if((i != 333) && (i != 337) && (i != 338) && (bf.isSet(i) != 0)) { pfc.fstr("BitField::UnitTest() Fehler 4").pr(); }
+    }
+    if( (bf.isSet(333) != 1) && (bf.isSet(337) != 1) && (bf.isSet(338) != 1)) { pfc.fstr("BitField::UnitTest() Fehler 5").pr(); }
+   
+    bf.set(333,0);
+    bf.set(337,0);
+    bf.set(338,0);
+    for(var int i=0; i < 1000; i++)
+    {
+        if(bf.isSet(i) != 0) { pfc.fstr("BitField::UnitTest() Fehler 6").pr(); }
+    }
+    for(var int i=0; i < 1000; i++)
+    { 
+        var int im3 = i % 3;
+        if( im3 == 0) { bf.set(i,1);  }
+    }
+
+    for(var int i=0; i < 1000; i++)
+    { 
+        var int im3 = i % 3;
+        if( im3 == 0 )
+        {
+            if( bf.isSet(i) != 1 ) { pfc.fstr("BitField::UnitTest() Fehler 7").pr();  }
+        }
+        else
+        {
+            if( bf.isSet(i) != 0 ) { pfc.fstr("BitField::UnitTest() Fehler 7.2").pr();  }
+        }
+    }
+    for(var int i=0; i < 1000; i++)
+    { 
+        var int im3 = i % 3;
+        if( im3 == 0) { bf.set(i,0);  }
+    }
+    for(var int i=0; i < 1000; i++)
+    {
+        if(bf.isSet(i) != 0) { pfc.fstr("BitField::UnitTest() Fehler 8").pr(); }
+    }
+     
+}
+
+

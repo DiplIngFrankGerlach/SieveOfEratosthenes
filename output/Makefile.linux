@@ -1,0 +1,31 @@
+#this file has been generated automatically by the
+#sappeur compiler. If you want to change anything,
+#please rename this file. It will be overwritten on the
+#next sappeur compiler run.
+
+OBJECTS=placementNew.o staticData.o determStackMemory.o suchoi.o String.o StringUtil.o System.o AppMain.o BitField.o Math.o generative_impls.o mapping.o main.o threadFunctions.o
+String.o:String.cpp
+StringUtil.o:StringUtil.cpp
+System.o:System.cpp
+AppMain.o:AppMain.cpp
+BitField.o:BitField.cpp
+Math.o:Math.cpp
+
+
+$(OBJECTS):header.h
+header.h:mapping.h
+CC = g++
+VPATH=/home/fgerlach/eigene/Sappeur30/haupt//cppMapping
+
+INCLUDE=-I/usr/include/unicode -I/home/fgerlach/eigene/Sappeur30/haupt//cppMapping -I. -I.. 
+
+LDLIBS=-lstdc++ -lm
+.SUFFIXES: .o .cpp
+OPT=-O3
+MISC_OPT=-DSPR_USE_PTHREAD_MUTEX_LOCKS=1 -DLINUX_SAPPEUR=1 -DSPR_DEBUG=1 -DSPR_PTHREAD=1 -pthread
+.cpp.o:
+	$(CC) $(OPT) $(MISC_OPT) -DGCC_X86 $(INCLUDE) -c $<
+all:$(OBJECTS)
+	$(CC) $(OPT) $(MISC_OPT) -o sprprog.exe $^ $(LDLIBS)
+clean:
+	rm *.o sprprog.exe

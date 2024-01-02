@@ -1,0 +1,64 @@
+
+
+
+int Main::main()
+{ 
+   /*
+   var BitField bf(1000);
+   bf.UnitTest(); 
+   return 1;
+   */
+
+   var PrintfClass pfc;
+
+   var int N;
+   var CommandlineArgs cla;
+   if(cla.numberOfArguments() == 2)
+   {
+       var String_16 nStr; 
+       cla.getArgument(1,nStr);
+       N = nStr.asNumber();
+   }
+   else{ pfc.fstr("Usage: sieve <N>").pr(); return -1;}
+
+   //Algorithmus von https://de.wikipedia.org/wiki/Sieb_des_Eratosthenes
+   var BitField gestrichen(N+1);
+
+
+   // Siebe mit allen (Prim-) Zahlen i, wobei i der kleinste Primfaktor einer zusammengesetzten
+   // Zahl j = i*k ist. Der kleinste Primfaktor einer zusammengesetzten Zahl j kann nicht größer
+   // als die Quadratwurzel von j <= n sein.
+   var Math m;
+   var int sqrtN = cast(int,m.wurzel(N));
+
+   //pfc.fstr("sqrt(N) = $").sa(sqrtN).pr();
+
+   for(var int i=2; i <= sqrtN;i++)
+   {  
+     if(gestrichen.isSet(i) == 0)
+     { 
+         // i ist prim, gib i aus...
+         pfc.fstr("$,").sa(i).pr();
+         // ...und streiche seine Vielfachen, beginnend mit i*i
+         // (denn k*i mit k<i wurde schon als Vielfaches von k gestrichen)
+         var int iq = i * i;
+         for(var int j = iq; j <= N; j = j + i)
+         {
+             //pfc.fstr("streiche $").sa(j).pr();
+             gestrichen.set(j,1);
+         }
+     }
+   } 
+   // Gib die Primzahlen größer als Wurzel(n) aus - also die, die noch nicht gestrichen wurden
+   
+   for(var int i=sqrtN + 1; i <= N; i++)
+   {
+     if( gestrichen.isSet(i) == 0)
+     {
+         // i ist prim, gib i aus
+         pfc.fstr("$,").sa(i).pr();
+     }
+   }
+
+   return 1; 
+}
