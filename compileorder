@@ -3,4 +3,5 @@ StringUtil.ad,
 System.ad,
 Math.ad,
 BitField.ad,
+Sieve2.ad,
 AppMain.ad

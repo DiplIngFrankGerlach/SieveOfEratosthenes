@@ -1,0 +1,7 @@
+
+
+class Sieve2 
+{
+methods:
+    void run();
+};

@@ -1,17 +1,8 @@
 
 
-/* Sieve of Eratosthenes, with bitfield */
-int Main::main()
+/*Sieve of Eratosthenes, with a full octet per number. Slightly better performance than a bitfield */
+void Sieve2::run()
 { 
-   /*
-   var BitField bf(1000);
-   bf.UnitTest(); 
-   return 1;
-   */
-
-   //var Sieve2 s2;
-   //s2.run(); 
-   //return 1;
 
    var PrintfClass pfc;
 
@@ -23,11 +14,15 @@ int Main::main()
        cla.getArgument(1,nStr);
        N = nStr.asNumber();
    }
-   else{ pfc.fstr("Usage: sieve <N>").pr(); return -1;}
+   else{ pfc.fstr("Usage: sieve <N>").pr(); return;}
 
    //Algorithmus von https://de.wikipedia.org/wiki/Sieb_des_Eratosthenes
-   var BitField gestrichen(N+1);
+   var *char gestrichen[] =  new char[N+1];
 
+   var char c0 = cast(char,0);
+   var char c1 = cast(char,1);
+
+   for(var int i=0;i < gestrichen.sz;i++) { gestrichen[i] = c0; }
 
    // Siebe mit allen (Prim-) Zahlen i, wobei i der kleinste Primfaktor einer zusammengesetzten
    // Zahl j = i*k ist. Der kleinste Primfaktor einer zusammengesetzten Zahl j kann nicht größer
@@ -35,11 +30,10 @@ int Main::main()
    var Math m;
    var int sqrtN = cast(int,m.wurzel(N));
 
-   //pfc.fstr("sqrt(N) = $").sa(sqrtN).pr();
 
    for(var int i=2; i <= sqrtN;i++)
    {  
-     if(gestrichen.isSet(i) == 0)
+     if(gestrichen[i] == c0)
      { 
          // i ist prim, gib i aus...
          pfc.fstr("$,").sa(i).pr();
@@ -49,7 +43,7 @@ int Main::main()
          for(var int j = iq; j <= N; j = j + i)
          {
              //pfc.fstr("streiche $").sa(j).pr();
-             gestrichen.set(j,1);
+             gestrichen[j] = c1;
          }
      }
    } 
@@ -57,12 +51,11 @@ int Main::main()
    
    for(var int i=sqrtN + 1; i <= N; i++)
    {
-     if( gestrichen.isSet(i) == 0)
+     if( gestrichen[i] == 0)
      {
          // i ist prim, gib i aus
          pfc.fstr("$,").sa(i).pr();
      }
    }
 
-   return 1; 
 }
