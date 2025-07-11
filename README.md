@@ -1,4 +1,4 @@
-#Sieve of Eratosthenes in Sappeur, C, C++, Java
+# Sieve of Eratosthenes in Sappeur, C, C++, Java
 
 This is a somewhat efficient prime number calculation algorithm. 
 
